@@ -1,27 +1,33 @@
-- ruleID: spring-boot-heapdump
-  category: mandatory
-  effort: "1"
+- ruleID: spring-boot-heapdump-00001
+  category: potential
+  effort: 5
   labels:
-    - konveyor.io/source=spring
+  - konveyor.io/source=spring
+  - konveyor.io/target=cloud-readiness
   when:
-    and:
-      - java.dependency:
-        name: org.springframework.boot.spring-boot-starter-actuator
-        lowerbound: 0.0.0
-      - or: 
-        - builtin.filecontent:
-          filePattern: .*\.properties
-          pattern: management.endpoints.web.exposure.include=.*heapdump.*
-        - builtin.filecontent:
-          filePattern: .*\.properties
-          pattern: management.endpoints.web.exposure.include=*
-  description: "Spring Boot heapdump exposed"
+  - builtin.filecontent:
+      filePattern: application.*\.(properties|yml|yaml)
+      pattern: management.endpoints.web.exposure.include.*heapdump.*"
+  description: "Georgs test 2 - Spring Boot heapdump exposed"
   message: "Spring Boot heapdumps should be exposed in dev environments only!!! And with extreme caution!"
   links:
-    - title: "Spring Boot Docs"
-      url: "https://docs.spring.io/spring-boot/index.html" 
-    - title: "Spring Boot Actuator Docs"
-      url: https://docs.spring.io/spring-boot/how-to/actuator.html
-    - title: "Georg's Blog"
-      url: https://gmodzelewski.github.io/blog/posts/2025-01-03-news/#1-fix-spring-configuration
-
+  - title: "Spring Boot Docs"
+    url: "https://docs.spring.io/spring-boot/index.html" 
+  - title: "Spring Boot Actuator Docs"
+    url: https://docs.spring.io/spring-boot/how-to/actuator.html
+- ruleID: springboot-actuator-to-quarkus-1234
+  category: mandatory
+  customVariables: []
+  description: "Georgs test"
+  effort: 1
+  labels:
+  - konveyor.io/source=springboot
+  - konveyor.io/target=quarkus
+  links:
+  - title: Quarkus Guide - Smallrye Health
+    url: https://quarkus.io/guides/smallrye-health
+  message: Replace `management.endpoints.web.exposure.include=health` with `quarkus.smallrye-health.root-path=/actuator/health`
+  when:
+    builtin.filecontent:
+      filePattern: application.*\.(properties|yml|yaml)
+      pattern: management.endpoints.web.exposure.include.*health

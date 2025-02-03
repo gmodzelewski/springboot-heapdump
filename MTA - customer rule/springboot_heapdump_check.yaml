@@ -1,0 +1,27 @@
+- ruleID: spring-boot-heapdump
+  category: mandatory
+  effort: "1"
+  labels:
+    - konveyor.io/source=spring
+  when:
+    and:
+      - java.dependency:
+        name: org.springframework.boot.spring-boot-starter-actuator
+        lowerbound: 0.0.0
+      - or: 
+        - builtin.filecontent:
+          filePattern: .*\.properties
+          pattern: management.endpoints.web.exposure.include=.*heapdump.*
+        - builtin.filecontent:
+          filePattern: .*\.properties
+          pattern: management.endpoints.web.exposure.include=*
+  description: "Spring Boot heapdump exposed"
+  message: "Spring Boot heapdumps should be exposed in dev environments only!!! And with extreme caution!"
+  links:
+    - title: "Spring Boot Docs"
+      url: "https://docs.spring.io/spring-boot/index.html" 
+    - title: "Spring Boot Actuator Docs"
+      url: https://docs.spring.io/spring-boot/how-to/actuator.html
+    - title: "Georg's Blog"
+      url: https://gmodzelewski.github.io/blog/posts/2025-01-03-news/#1-fix-spring-configuration
+
